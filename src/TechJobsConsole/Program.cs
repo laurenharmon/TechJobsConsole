@@ -122,16 +122,24 @@ namespace TechJobsConsole
 
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
+            if (someJobs.Count == 0)
+            {
+                Console.WriteLine("Sorry. No jobs found under that search term.");
+            }
+            else
+            { 
             for (int i = 0; i < someJobs.Count; i++)
             {
-                string divider = "------------------------";
-                foreach (var job in someJobs[i])
-                {
-                    string a = job.Key;
-                    string b = job.Value;
-                    Console.WriteLine(a + ": " + b);
+
+                    string divider = "------------------------";
+                    foreach (var job in someJobs[i])
+                    {
+                        string a = job.Key;
+                        string b = job.Value;
+                        Console.WriteLine(a + ": " + b);
+                    }
+                    Console.WriteLine(divider);
                 }
-                Console.WriteLine(divider);
             }
         }
     }
