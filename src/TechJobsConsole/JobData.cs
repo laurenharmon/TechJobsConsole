@@ -58,85 +58,106 @@ namespace TechJobsConsole
             return jobs;
         }
 
-        /*
-         * Load and parse data from job_data.csv
-         */
-        private static void LoadData()
+        public static List<Dictionary<string, string>> FindByValue(string column, string value)
         {
+            LoadData();
 
-            if (IsDataLoaded)
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+// WORKS FOR NON-CASE-SENSITIVE, STILL REPEATS! 
+            foreach (Dictionary<string, string> job in AllJobs)
             {
-                return;
-            }
+                string aValue = value;
 
-            List<string[]> rows = new List<string[]>();
-
-            using (StreamReader reader = File.OpenText("job_data.csv"))
-            {
-                while (reader.Peek() >= 0)
+                if (!job.ContainsValue(aValue))
                 {
-                    string line = reader.ReadLine();
-                    string[] rowArrray = CSVRowToStringArray(line);
-                    if (rowArrray.Length > 0)
-                    {
-                        rows.Add(rowArrray);
-                    }
+                    jobs.Add(job);
                 }
             }
-
-            string[] headers = rows[0];
-            rows.Remove(headers);
-
-            // Parse each row array into a more friendly Dictionary
-            foreach (string[] row in rows)
-            {
-                Dictionary<string, string> rowDict = new Dictionary<string, string>();
-
-                for (int i = 0; i < headers.Length; i++)
-                {
-                    rowDict.Add(headers[i], row[i]);
-                }
-                AllJobs.Add(rowDict);
-            }
-
-            IsDataLoaded = true;
+            return jobs;
         }
 
-        /*
-         * Parse a single line of a CSV file into a string array
-         */
-        private static string[] CSVRowToStringArray(string row, char fieldSeparator = ',', char stringSeparator = '\"')
-        {
-            bool isBetweenQuotes = false;
-            StringBuilder valueBuilder = new StringBuilder();
-            List<string> rowValues = new List<string>();
+    
 
-            // Loop through the row string one char at a time
-            foreach (char c in row.ToCharArray())
+            /*
+             * Load and parse data from job_data.csv
+             */
+            private static void LoadData()
             {
-                if ((c == fieldSeparator && !isBetweenQuotes))
+
+                if (IsDataLoaded)
                 {
-                    rowValues.Add(valueBuilder.ToString());
-                    valueBuilder.Clear();
+                    return;
                 }
-                else
+
+                List<string[]> rows = new List<string[]>();
+
+                using (StreamReader reader = File.OpenText("job_data.csv"))
                 {
-                    if (c == stringSeparator)
+                    while (reader.Peek() >= 0)
                     {
-                        isBetweenQuotes = !isBetweenQuotes;
+                        string line = reader.ReadLine();
+                        string[] rowArrray = CSVRowToStringArray(line);
+                        if (rowArrray.Length > 0)
+                        {
+                            rows.Add(rowArrray);
+                        }
+                    }
+                }
+
+                string[] headers = rows[0];
+                rows.Remove(headers);
+
+                // Parse each row array into a more friendly Dictionary
+                foreach (string[] row in rows)
+                {
+                    Dictionary<string, string> rowDict = new Dictionary<string, string>();
+
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        rowDict.Add(headers[i], row[i]);
+                    }
+                    AllJobs.Add(rowDict);
+                }
+
+                IsDataLoaded = true;
+            }
+
+            /*
+             * Parse a single line of a CSV file into a string array
+             */
+            private static string[] CSVRowToStringArray(string row, char fieldSeparator = ',', char stringSeparator = '\"')
+            {
+                bool isBetweenQuotes = false;
+                StringBuilder valueBuilder = new StringBuilder();
+                List<string> rowValues = new List<string>();
+
+                // Loop through the row string one char at a time
+                foreach (char c in row.ToCharArray())
+                {
+                    if ((c == fieldSeparator && !isBetweenQuotes))
+                    {
+                        rowValues.Add(valueBuilder.ToString());
+                        valueBuilder.Clear();
                     }
                     else
                     {
-                        valueBuilder.Append(c);
+                        if (c == stringSeparator)
+                        {
+                            isBetweenQuotes = !isBetweenQuotes;
+                        }
+                        else
+                        {
+                            valueBuilder.Append(c);
+                        }
                     }
                 }
+
+                // Add the final value
+                rowValues.Add(valueBuilder.ToString());
+                valueBuilder.Clear();
+
+                return rowValues.ToArray();
             }
-
-            // Add the final value
-            rowValues.Add(valueBuilder.ToString());
-            valueBuilder.Clear();
-
-            return rowValues.ToArray();
         }
     }
-}
+
