@@ -9,10 +9,6 @@ namespace TechJobsConsole
         {
             // Create two Dictionary vars to hold info for menu and data
 
-
-            // THIS VERSION WORKS DO NOT DELETE THIS LAUREN OR I SWEAR TO GOD 
-
-
             // Top-level menu options
             Dictionary<string, string> actionChoices = new Dictionary<string, string>();
             actionChoices.Add("search", "Search");

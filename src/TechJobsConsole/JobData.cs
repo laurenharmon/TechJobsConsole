@@ -63,7 +63,7 @@ namespace TechJobsConsole
             LoadData();
 
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
-// WORKS FOR NON-CASE-SENSITIVE, STILL REPEATS! 
+
             foreach (Dictionary<string, string> job in AllJobs)
             {
                 string aValue = value.ToLower();
