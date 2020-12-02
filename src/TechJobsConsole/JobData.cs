@@ -54,23 +54,27 @@ namespace TechJobsConsole
                     jobs.Add(row);
                 }
             }
-
             return jobs;
         }
 
-        public static List<Dictionary<string, string>> FindByValue(string column, string value)
+        public static List<Dictionary<string, string>> FindByValue(string value)
         {
             LoadData();
 
+            //empty jobs string to return
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
-            foreach (Dictionary<string, string> job in AllJobs)
-            {
-                string aValue = value.ToLower();
+            //case insensitivity 
+            string compareValue = value.ToLower();
 
-                if (!job.ContainsValue(aValue))
+            foreach (Dictionary<string, string> entry in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> column in entry)
                 {
-                    jobs.Add(job);
+                    if (column.Value.ToLower().Contains(compareValue))
+                    {
+                        jobs.Add(entry);
+                    }
                 }
             }
             return jobs;
